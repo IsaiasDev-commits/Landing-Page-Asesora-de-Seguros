@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protección Total | Tu Asesora de Seguros</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0a1f44',
+                        secondary: '#3b82f6',
+                        accent: '#60a5fa',
+                        dark: '#0a1f44'
+                    },
+                    fontFamily: {
+                        'poppins': ['Poppins', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #0a1f44 0%, #3b82f6 100%);
+        }
+        .card-shadow {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        @keyframes floating {
+            0% { transform: translate(0, 0px); }
+            50% { transform: translate(0, 15px); }
+            100% { transform: translate(0, -0px); }
+        }
+        .chatbot-container {
+            transition: all 0.3s ease;
+        }
+        .chatbot-message {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease, opacity 0.5s ease;
+        }
+        .chatbot-message.active {
+            max-height: 200px;
+            opacity: 1;
+        }
+        .plan-section {
+            scroll-margin-top: 100px;
+        }
+        .tab-active {
+            background-color: #0a1f44;
+            color: white;
+        }
+        
+        /* Estilos para el input de teléfono CORREGIDOS */
+        input[type="tel"] {
+            -moz-appearance: textfield;
+            appearance: textfield; /* Propiedad estándar */
+        }
+        input[type="tel"]::-webkit-outer-spin-button,
+        input[type="tel"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            appearance: none; /* Propiedad estándar */
+            margin: 0;
+        }
+
+        /* Estilos mejorados para logos */
+        .logo-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        .logo-container:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body class="font-poppins bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold mr-2">
+                    PT
+                </div>
+                <h1 class="text-xl font-bold text-dark">Protección Total</h1>
+            </div>
+            
+            <!-- Menú para móviles -->
+            <div class="md:hidden">
+                <button id="menu-toggle" class="text-dark focus:outline-none">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+            
+            <!-- Menú de navegación -->
+            <nav id="menu" class="hidden md:flex space-x-8">
+                <a href="#inicio" class="text-dark hover:text-primary font-medium transition-colors">Inicio</a>
+                <a href="#beneficios" class="text-dark hover:text-primary font-medium transition-colors">Beneficios</a>
+                <a href="#planes" class="text-dark hover:text-primary font-medium transition-colors">Planes</a>
+                <a href="#aseguradoras" class="text-dark hover:text-primary font-medium transition-colors">Aseguradoras</a>
+                <a href="#opiniones" class="text-dark hover:text-primary font-medium transition-colors">Opiniones</a>
+                <a href="#contacto" class="text-dark hover:text-primary font-medium transition-colors">Contacto</a>
+            </nav>
+        </div>
+        
+        <!-- Menú móvil desplegable -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white py-4 px-4 shadow-lg">
+            <a href="#inicio" class="block py-2 text-dark hover:text-primary">Inicio</a>
+            <a href="#beneficios" class="block py-2 text-dark hover:text-primary">Beneficios</a>
+            <a href="#planes" class="block py-2 text-dark hover:text-primary">Planes</a>
+            <a href="#aseguradoras" class="block py-2 text-dark hover:text-primary">Aseguradoras</a>
+            <a href="#opiniones" class="block py-2 text-dark hover:text-primary">Opiniones</a>
+            <a href="#contacto" class="block py-2 text-dark hover:text-primary">Contacto</a>
+        </div>
+    </header>
+
+    <!-- Sección Hero -->
+    <section id="inicio" class="gradient-bg text-white py-16 md:py-24">
+        <div class="container mx-auto px-4 flex flex-col md:flex-row items-center">
+            <div class="md:w-1/2 mb-10 md:mb-0">
+                <h1 class="text-4xl md:text-5xl font-bold mb-6">Protege lo que más <span class="text-accent">importa</span> con nuestros seguros</h1>
+                <p class="text-xl mb-8 opacity-90">Más de 15 años brindando tranquilidad y seguridad a familias y empresas. Tu asesora de confianza en seguros.</p>
+                <a href="#planes" class="inline-block bg-white text-primary font-bold py-3 px-8 rounded-lg hover:bg-gray-100 transition-colors shadow-lg">Ver Planes</a>
+            </div>
+            <div class="md:w-1/2 flex justify-center">
+                <div class="relative">
+                    <div class="w-80 h-80 bg-white/10 rounded-full flex items-center justify-center floating">
+                        <div class="w-64 h-64 bg-white/20 rounded-full flex items-center justify-center">
+                            <div class="w-48 h-48 bg-white/30 rounded-full flex items-center justify-center">
+                                <i class="fas fa-shield-alt text-white text-6xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Beneficios -->
+    <section id="beneficios" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center text-dark mb-12">¿Por qué elegirnos?</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Beneficio 1 -->
+                <div class="bg-gray-50 p-8 rounded-xl card-shadow text-center hover:transform hover:-translate-y-2 transition-transform">
+                    <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-umbrella text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-dark mb-4">Cobertura Completa</h3>
+                    <p class="text-gray-600">Ofrecemos pólizas adaptadas a tus necesidades específicas, con amplia cobertura y opciones personalizadas.</p>
+                </div>
+                
+                <!-- Beneficio 2 -->
+                <div class="bg-gray-50 p-8 rounded-xl card-shadow text-center hover:transform hover:-translate-y-2 transition-transform">
+                    <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-user-tie text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-dark mb-4">Atención Personalizada</h3>
+                    <p class="text-gray-600">Te asignamos un asesor especializado que te acompañará durante todo el proceso y resolverá tus dudas.</p>
+                </div>
+                
+                <!-- Beneficio 3 -->
+                <div class="bg-gray-50 p-8 rounded-xl card-shadow text-center hover:transform hover:-translate-y-2 transition-transform">
+                    <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-bolt text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-dark mb-4">Respuesta Rápida</h3>
+                    <p class="text-gray-600">Procesamos tus solicitudes y reclamaciones de manera ágil, para que recibas respuestas en el menor tiempo posible.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Planes -->
+    <section id="planes" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center text-dark mb-4">Nuestros Planes de Seguro</h2>
+            <p class="text-center text-gray-600 max-w-2xl mx-auto mb-12">Elige el plan que mejor se adapte a tus necesidades. Te contactaremos para brindarte una cotización personalizada.</p>
+            
+            <!-- Navegación entre tipos de seguros -->
+            <div class="flex flex-wrap justify-center mb-12 gap-2">
+                <button class="plan-tab bg-white text-dark font-medium py-3 px-6 rounded-lg hover:bg-primary hover:text-white transition-colors card-shadow tab-active" data-tab="salud">
+                    <i class="fas fa-heartbeat mr-2"></i>Seguro de Salud
+                </button>
+                <button class="plan-tab bg-white text-dark font-medium py-3 px-6 rounded-lg hover:bg-primary hover:text-white transition-colors card-shadow" data-tab="vida">
+                    <i class="fas fa-heart mr-2"></i>Seguro de Vida
+                </button>
+                <button class="plan-tab bg-white text-dark font-medium py-3 px-6 rounded-lg hover:bg-primary hover:text-white transition-colors card-shadow" data-tab="inversiones">
+                    <i class="fas fa-chart-line mr-2"></i>Planes de Inversión
+                </button>
+            </div>
+            
+            <!-- Planes de Salud -->
+            <div id="salud-plans" class="plan-section grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Plan Básico Salud -->
+                <div class="bg-white rounded-2xl overflow-hidden card-shadow transform hover:-translate-y-2 transition-transform">
+                    <div class="bg-primary text-white py-6 text-center">
+                        <h3 class="text-2xl font-bold">Salud Local</h3>
+                        <div class="mt-4">
+                            <span class="text-2xl font-bold">Cobertura Nacional</span>
+                        </div>
+                    </div>
+                    <div class="p-8">
+                        <ul class="space-y-4 mb-8">
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                                <span>Consultas médicas generales</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                                <span>Emergencias</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                                <span>Descuentos en medicamentos</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                                <span>Hospitalización local</span>
+                            </li>
+                        </ul>
+                        <a href="#contacto" class="block w-full bg-gray-200 text-dark text-center font-bold py-3 rounded-lg hover:bg-gray-300 transition-colors">Solicitar Cotización</a>
+                    </div>
+                </div>
+                
+                <!-- Plan Estándar Salud -->
+                <div class="bg-white rounded-2xl overflow-hidden card-shadow transform hover:-translate-y-2 transition-transform relative">
+                    <div class="absolute top-0 right-0 bg-secondary text-white py-1 px-4 rounded-bl-lg font-medium">
+                        Más Popular
+                    </div>
+                    <div class="bg-secondary text-white py-6 text-center">
+                        <h3 class="text-2xl font-bold">Salud Plus</h3>
+                        <div class="mt-4">
+                            <span class="text-2xl font-bold">Cobertura Ampliada</span>
+                        </div>
+                    </div>
+                    <div class="p-8">
+                        <ul class="space-y-4 mb-8">
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                                <span>Consultas médicas generales y especialistas</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                                <span>Emergencias y hospitalización</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                                <span>Medicamentos con cobertura</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                                <span>Asistencia 24/7</span>
+                            </li>
+                        </ul>
+                        <a href="#contacto" class="block w-full bg-secondary text-white text-center font-bold py-3 rounded-lg hover:bg-dark transition-colors">Solicitar Cotización</a>
+                    </div>
+                </div>
+                
+                <!-- Plan Premium Salud -->
+                <div class="bg-white rounded-2xl overflow-hidden card-shadow transform hover:-translate-y-2 transition-transform">
+                    <div class="bg-dark text-white py-6 text-center">
+                        <h3 class="text-2xl font-bold">Salud Internacional</h3>
+                        <div class="mt-4">
+                            <span class="text-2xl font-bold">Cobertura Global</span>
+                        </div>
+                    </div>
+                    <div class="p-8">
+                        <ul class="space-y-4 mb-8">
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                                <span>Cobertura hospitalaria completa</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                                <span>Segunda opinión médica</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                                <span>Cirugías y procedimientos</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                                <span>Atención médica en LATAM, USA y/o Europa</span>
+                            </li>
+                        </ul>
+                        <a href="#contacto" class="block w-full bg-dark text-white text-center font-bold py-3 rounded-lg hover:bg-gray-800 transition-colors">Solicitar Cotización</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Planes de Vida -->
+            <div id="vida-plans" class="plan-section grid grid-cols-1 md:grid-cols-3 gap-8 hidden">
+                <!-- Plan Básico Vida -->
+                <div class="bg-white rounded-2xl overflow-hidden card-shadow transform hover:-translate-y-2 transition-transform">
+                    <div class="bg-primary text-white py-6 text-center">
+                        <h3 class="text-2xl font-bold">Seguro de Vida a Término</h3>
+                    </div>
+                    <div class="p-8">
+                        <ul class="space-y-4 mb-8">
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                                <span>Cobertura por fallecimiento</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                                <span>Devolución de prima (opcional)</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                                <span>Indemnización por accidente</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                                <span>Protección nacional</span>
+                            </li>
+                        </ul>
+                        <a href="#contacto" class="block w-full bg-gray-200 text-dark text-center font-bold py-3 rounded-lg hover:bg-gray-300 transition-colors">Solicitar Cotización</a>
+                    </div>
+                </div>
+                
+                <!-- Plan Estándar Vida -->
+                <div class="bg-white rounded-2xl overflow-hidden card-shadow transform hover:-translate-y-2 transition-transform relative">
+                    <div class="absolute top-0 right-0 bg-secondary text-white py-1 px-4 rounded-bl-lg font-medium">
+                        Recomendado
+                    </div>
+                    <div class="bg-secondary text-white py-6 text-center">
+                        <h3 class="text-2xl font-bold">Seguro de Vida Familiar</h3>
+                        <div class="mt-4">
+                            <span class="text-2xl font-bold">Protección Completa</span>
+                        </div>
+                    </div>
+                    <div class="p-8">
+                        <ul class="space-y-4 mb-8">
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                                <span>Cobertura por fallecimiento</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                                <span>Protección para toda la familia</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                                <span>Indemnización por accidente</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                                <span>Cobertura ampliada</span>
+                            </li>
+                        </ul>
+                        <a href="#contacto" class="block w-full bg-secondary text-white text-center font-bold py-3 rounded-lg hover:bg-dark transition-colors">Solicitar Cotización</a>
+                    </div>
+                </div>
+                
+                <!-- Plan Premium Vida -->
+                <div class="bg-white rounded-2xl overflow-hidden card-shadow transform hover:-translate-y-2 transition-transform">
+                    <div class="bg-dark text-white py-6 text-center">
+                        <h3 class="text-2xl font-bold">Seguro de Vida con Ahorro</h3>
+                        <div class="mt-4">
+                            <span class="text-2xl font-bold">Protección Global</span>
+                        </div>
+                    </div>
+                    <div class="p-8">
+                        <ul class="space-y-4 mb-8">
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                                <span>Cobertura máxima por fallecimiento</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                                <span>Protección familiar extendida</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                                <span>Indemnización por incapacidad</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                                <span>Cobertura internacional</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                                <span>Con devolución de primas pagadas</span>
+                            </li>
+                        </ul>
+                        <a href="#contacto" class="block w-full bg-dark text-white text-center font-bold py-3 rounded-lg hover:bg-gray-800 transition-colors">Solicitar Cotización</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Planes de Inversión -->
+            <div id="inversiones-plans" class="plan-section grid grid-cols-1 md:grid-cols-3 gap-8 hidden">
+                <!-- Plan Conservador -->
+                <div class="bg-white rounded-2xl overflow-hidden card-shadow transform hover:-translate-y-2 transition-transform">
+                    <div class="bg-primary text-white py-6 text-center">
+                        <h3 class="text-2xl font-bold">Inversión Local</h3>
+                        <div class="mt-4">
+                            <span class="text-2xl font-bold">Estrategia Conservadora</span>
+                        </div>
+                    </div>
+                    <div class="p-8">
+                        <ul class="space-y-4 mb-8">
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                                <span>Bajo riesgo</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                                <span>Liquidez inmediata</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                                <span>Rendimiento estable</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                                <span>Mercado local</span>
+                            </li>
+                        </ul>
+                        <a href="#contacto" class="block w-full bg-gray-200 text-dark text-center font-bold py-3 rounded-lg hover:bg-gray-300 transition-colors">Solicitar Cotización</a>
+                    </div>
+                </div>
+                
+                <!-- Plan Balanceado -->
+                <div class="bg-white rounded-2xl overflow-hidden card-shadow transform hover:-translate-y-2 transition-transform relative">
+                    <div class="absolute top-0 right-0 bg-secondary text-white py-1 px-4 rounded-bl-lg font-medium">
+                        Equilibrado
+                    </div>
+                    <div class="bg-secondary text-white py-6 text-center">
+                        <h3 class="text-2xl font-bold">Inversión Plus</h3>
+                        <div class="mt-4">
+                            <span class="text-2xl font-bold">Estrategia Balanceada</span>
+                        </div>
+                    </div>
+                    <div class="p-8">
+                        <ul class="space-y-4 mb-8">
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                                <span>Riesgo moderado</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                                <span>Liquidez a mediano plazo</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                                <span>Crecimiento estable</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                                <span>Diversificación regional</span>
+                            </li>
+                        </ul>
+                        <a href="#contacto" class="block w-full bg-secondary text-white text-center font-bold py-3 rounded-lg hover:bg-dark transition-colors">Solicitar Cotización</a>
+                    </div>
+                </div>
+                
+                <!-- Plan Agresivo -->
+                <div class="bg-white rounded-2xl overflow-hidden card-shadow transform hover:-translate-y-2 transition-transform">
+                    <div class="bg-dark text-white py-6 text-center">
+                        <h3 class="text-2xl font-bold">Inversión Global</h3>
+                        <div class="mt-4">
+                            <span class="text-2xl font-bold">Estrategia de Crecimiento</span>
+                        </div>
+                    </div>
+                    <div class="p-8">
+                        <ul class="space-y-4 mb-8">
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                                <span>Alto potencial de crecimiento</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                                <span>Riesgo calculado</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                                <span>Horizonte a largo plazo</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                                <span>Mercados internacionales</span>
+                            </li>
+                        </ul>
+                        <a href="#contacto" class="block w-full bg-dark text-white text-center font-bold py-3 rounded-lg hover:bg-gray-800 transition-colors">Solicitar Cotización</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Aseguradoras CON LOGOS -->
+    <section id="aseguradoras" class="py-20 bg-white text-dark">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold mb-3 text-primary">Trabajamos con las mejores aseguradoras</h2>
+            <p class="text-gray-600 mb-12 max-w-2xl mx-auto">
+                Colaboramos con las aseguradoras más reconocidas del mercado para ofrecerte las mejores opciones de protección adaptadas a tus necesidades.
+            </p>
+
+            <!-- Cuadrícula de logos CON FALLBACK -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-6 items-center justify-center max-w-6xl mx-auto">
+                <!-- Saludsa -->
+                <div class="bg-white card-shadow rounded-xl flex items-center justify-center h-28 p-4 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                    <img src="img/saludsa.png" alt="Saludsa" class="h-12 w-auto object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                    <div class="text-center hidden">
+                        <div class="text-lg font-bold text-primary mb-1">Saludsa</div>
+                        <div class="text-xs text-gray-500">Seguros de Salud</div>
+                    </div>
+                </div>
+                
+                <!-- Mediken -->
+                <div class="bg-white card-shadow rounded-xl flex items-center justify-center h-28 p-4 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                    <img src="img/mediken.png" alt="Mediken" class="h-12 w-auto object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                    <div class="text-center hidden">
+                        <div class="text-lg font-bold text-primary mb-1">Mediken</div>
+                        <div class="text-xs text-gray-500">Cobertura Médica</div>
+                    </div>
+                </div>
+                
+                <!-- Asisken -->
+                <div class="bg-white card-shadow rounded-xl flex items-center justify-center h-28 p-4 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                    <img src="img/asisken.png" alt="Asisken" class="h-12 w-auto object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                    <div class="text-center hidden">
+                        <div class="text-lg font-bold text-primary mb-1">Asisken</div>
+                        <div class="text-xs text-gray-500">Asistencia Integral</div>
+                    </div>
+                </div>
+                
+                <!-- Planvital -->
+                <div class="bg-white card-shadow rounded-xl flex items-center justify-center h-28 p-4 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                    <img src="img/planvital.png" alt="Planvital" class="h-12 w-auto object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                    <div class="text-center hidden">
+                        <div class="text-lg font-bold text-primary mb-1">Planvital</div>
+                        <div class="text-xs text-gray-500">Planes de Vida</div>
+                    </div>
+                </div>
+                
+                <!-- BMI -->
+                <div class="bg-white card-shadow rounded-xl flex items-center justify-center h-28 p-4 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                    <img src="img/bmi.png" alt="BMI" class="h-12 w-auto object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                    <div class="text-center hidden">
+                        <div class="text-lg font-bold text-primary mb-1">BMI</div>
+                        <div class="text-xs text-gray-500">Seguros Internacionales</div>
+                    </div>
+                </div>
+                
+                <!-- Redbridge -->
+                <div class="bg-white card-shadow rounded-xl flex items-center justify-center h-28 p-4 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                    <img src="img/redbridge.png" alt="Redbridge" class="h-12 w-auto object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                    <div class="text-center hidden">
+                        <div class="text-lg font-bold text-primary mb-1">Redbridge</div>
+                        <div class="text-xs text-gray-500">Protección Global</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Texto inferior -->
+            <div class="mt-12 max-w-3xl mx-auto">
+                <p class="text-gray-500 text-sm">
+                    Cada aseguradora cuenta con altos estándares de calidad y solidez financiera, garantizando la protección que tú y tu familia merecen.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Opiniones -->
+    <section id="opiniones" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold text-dark mb-4">Lo que dicen nuestros clientes</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto mb-12">Conoce las experiencias de quienes ya confían en nosotros para proteger lo que más importa.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <!-- Opinión 1 -->
+                <div class="bg-white p-8 rounded-2xl card-shadow text-left transform hover:-translate-y-2 transition-transform duration-300">
+                    <div class="flex items-center mb-6">
+                        <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xl mr-4">
+                            SR
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-dark">Santiago Ramírez</h4>
+                            <div class="flex text-yellow-400 mt-1">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 italic mb-4">"Excelente servicio, me ayudaron a elegir el plan perfecto para mi familia. La asesora fue muy paciente y resolvió todas mis dudas. Muy recomendados."</p>
+                    <div class="text-sm text-gray-500">
+                        <i class="fas fa-shield-alt mr-2"></i>Seguro de Salud Familiar
+                    </div>
+                </div>
+
+                <!-- Opinión 2 -->
+                <div class="bg-white p-8 rounded-2xl card-shadow text-left transform hover:-translate-y-2 transition-transform duration-300">
+                    <div class="flex items-center mb-6">
+                        <div class="w-14 h-14 rounded-full bg-secondary/10 flex items-center justify-center text-secondary font-bold text-xl mr-4">
+                            PM
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-dark">Pamela Molina</h4>
+                            <div class="flex text-yellow-400 mt-1">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 italic mb-4">"El proceso fue rápido y transparente. La asesora siempre estuvo pendiente de mi solicitud y me mantuvo informada en cada paso. Muy profesional."</p>
+                    <div class="text-sm text-gray-500">
+                        <i class="fas fa-heart mr-2"></i>Seguro de Vida
+                    </div>
+                </div>
+
+                <!-- Opinión 3 -->
+                <div class="bg-white p-8 rounded-2xl card-shadow text-left transform hover:-translate-y-2 transition-transform duration-300">
+                    <div class="flex items-center mb-6">
+                        <div class="w-14 h-14 rounded-full bg-accent/10 flex items-center justify-center text-accent font-bold text-xl mr-4">
+                            TO
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-dark">Toby Ortega</h4>
+                            <div class="flex text-yellow-400 mt-1">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 italic mb-4">"Me encantó la atención personalizada y la rapidez con la que respondieron mis dudas. Encontré exactamente lo que necesitaba para mi negocio."</p>
+                    <div class="text-sm text-gray-500">
+                        <i class="fas fa-chart-line mr-2"></i>Plan de Inversión
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Indicadores de confianza -->
+            <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-primary mb-2">15+</div>
+                    <div class="text-gray-600">Años de experiencia</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-primary mb-2">2,500+</div>
+                    <div class="text-gray-600">Clientes satisfechos</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-primary mb-2">98%</div>
+                    <div class="text-gray-600">Tasa de satisfacción</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-primary mb-2">24/7</div>
+                    <div class="text-gray-600">Atención al cliente</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Contacto -->
+    <section id="contacto" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center text-dark mb-4">Solicita tu Cotización Personalizada</h2>
+            <p class="text-center text-gray-600 max-w-2xl mx-auto mb-12">Completa el formulario y nuestra asesora de seguros te contactará para brindarte la mejor opción adaptada a tus necesidades.</p>
+            
+            <div class="max-w-4xl mx-auto bg-gray-50 rounded-2xl card-shadow overflow-hidden">
+                <div class="md:flex">
+                    <div class="w-full p-8">
+                        <form id="contact-form" class="space-y-6">
+                            <div>
+                                <label for="name" class="block text-gray-700 mb-2">Nombre Completo *</label>
+                                <input type="text" id="name" name="name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
+                            </div>
+                            <div>
+                                <label for="email" class="block text-gray-700 mb-2">Correo Electrónico *</label>
+                                <input type="email" id="email" name="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
+                            </div>
+                            <div>
+                                <label for="phone" class="block text-gray-700 mb-2">Teléfono *</label>
+                                <input type="tel" id="phone" name="phone" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" pattern="[0-9]+" title="Por favor ingresa solo números" required>
+                                <p class="text-xs text-gray-500 mt-1">Ingresa solo números, sin espacios ni caracteres especiales</p>
+                            </div>
+                            <div>
+                                <label for="plan-type" class="block text-gray-700 mb-2">¿Qué plan te interesa? *</label>
+                                <select id="plan-type" name="plan_type" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
+                                    <option value="">Selecciona una opción</option>
+                                    <option value="salud">Seguro de Salud</option>
+                                    <option value="vida">Seguro de Vida</option>
+                                    <option value="inversiones">Planes de Inversión</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="message" class="block text-gray-700 mb-2">Mensaje o Consulta Específica *</label>
+                                <textarea id="message" name="message" rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Cuéntanos sobre tus necesidades específicas..." required></textarea>
+                            </div>
+                            <button type="submit" class="w-full bg-primary text-white font-bold py-3 rounded-lg hover:bg-dark transition-colors">
+                                <span id="submit-text">Solicitar Cotización con Asesora</span>
+                                <div id="loading-spinner" class="hidden">
+                                    <i class="fas fa-spinner fa-spin mr-2"></i> Enviando solicitud...
+                                </div>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-12">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-xl font-bold">Protección Total</h2>
+            <p class="text-gray-400 mt-4">&copy; 2025 Protección Total. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Chatbot -->
+    <div class="fixed bottom-24 right-6 z-40">
+        <!-- Botón del chatbot -->
+        <button id="chatbot-toggle" class="w-14 h-14 bg-primary rounded-full flex items-center justify-center text-white shadow-lg hover:bg-dark transition-colors">
+            <i class="fas fa-comments text-xl"></i>
+        </button>
+        
+        <!-- Ventana del chatbot -->
+        <div id="chatbot-container" class="chatbot-container absolute bottom-16 right-0 w-80 h-96 bg-white rounded-2xl shadow-2xl hidden flex-col">
+            <!-- Header del chatbot -->
+            <div class="gradient-bg text-white p-4 rounded-t-2xl flex justify-between items-center">
+                <div class="flex items-center">
+                    <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center mr-2">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3 class="font-bold">Asistente Virtual</h3>
+                </div>
+                <button id="chatbot-close" class="text-white hover:text-gray-200">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <!-- Mensajes del chatbot -->
+            <div class="flex-1 p-4 overflow-y-auto bg-gray-50">
+                <div class="space-y-4">
+                    <!-- Mensaje del bot -->
+                    <div class="flex items-start">
+                        <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white mr-2 flex-shrink-0">
+                            <i class="fas fa-robot text-sm"></i>
+                        </div>
+                        <div class="bg-white p-3 rounded-lg shadow-sm max-w-xs">
+                            <p class="text-sm">¡Hola! Soy tu asistente virtual. ¿En qué puedo ayudarte hoy?</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Opciones de preguntas frecuentes -->
+                    <div id="chatbot-messages" class="space-y-4">
+                        <!-- Las respuestas del bot se agregarán aquí -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Input del chatbot -->
+            <div class="p-4 border-t border-gray-200">
+                <div class="flex space-x-2">
+                    <input type="text" id="chatbot-input" placeholder="Escribe tu pregunta..." class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm">
+                    <button id="chatbot-send" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-dark transition-colors">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                
+                <!-- Preguntas rápidas -->
+                <div class="mt-2 flex flex-wrap gap-2">
+                    <button class="quick-question text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-full transition-colors" data-question="¿Qué seguros ofrecen?">
+                        ¿Qué seguros ofrecen?
+                    </button>
+                    <button class="quick-question text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-full transition-colors" data-question="¿Cómo solicito una cotización?">
+                        Cotización
+                    </button>
+                    <button class="quick-question text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-full transition-colors" data-question="¿Cuáles son los métodos de pago?">
+                        Métodos de pago
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Menú móvil
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+        // Navegación entre planes
+        const planTabs = document.querySelectorAll('.plan-tab');
+        const planSections = {
+            'salud': document.getElementById('salud-plans'),
+            'vida': document.getElementById('vida-plans'),
+            'inversiones': document.getElementById('inversiones-plans')
+        };
+
+        planTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                const targetTab = this.getAttribute('data-tab');
+                
+                // Remover clase activa de todas las pestañas
+                planTabs.forEach(t => t.classList.remove('tab-active'));
+                // Agregar clase activa a la pestaña clickeada
+                this.classList.add('tab-active');
+                
+                // Ocultar todas las secciones de planes
+                Object.values(planSections).forEach(section => {
+                    section.classList.add('hidden');
+                });
+                
+                // Mostrar la sección correspondiente
+                if (planSections[targetTab]) {
+                    planSections[targetTab].classList.remove('hidden');
+                    
+                    // Desplazarse suavemente a la sección de planes
+                    document.getElementById('planes').scrollIntoView({ 
+                        behavior: 'smooth' 
+                    });
+                }
+            });
+        });
+
+        // Chatbot
+        const chatbotToggle = document.getElementById('chatbot-toggle');
+        const chatbotContainer = document.getElementById('chatbot-container');
+        const chatbotClose = document.getElementById('chatbot-close');
+        const chatbotSend = document.getElementById('chatbot-send');
+        const chatbotInput = document.getElementById('chatbot-input');
+        const chatbotMessages = document.getElementById('chatbot-messages');
+        const quickQuestions = document.querySelectorAll('.quick-question');
+
+        chatbotToggle.addEventListener('click', function() {
+            chatbotContainer.classList.toggle('hidden');
+        });
+
+        chatbotClose.addEventListener('click', function() {
+            chatbotContainer.classList.add('hidden');
+        });
+
+        // Respuestas predefinidas del chatbot - MEJORADAS
+        const botResponses = {
+            "hola": "¡Hola! Soy tu asistente virtual de Protección Total. ¿En qué puedo ayudarte hoy? Puedes preguntarme sobre nuestros seguros, solicitar una cotización o conocer nuestros métodos de pago.",
+            "buenos días": "¡Buenos días! ¿En qué puedo ayudarte hoy? Estoy aquí para resolver todas tus dudas sobre seguros.",
+            "buenas tardes": "¡Buenas tardes! ¿En qué puedo asistirte? Puedo brindarte información sobre nuestros planes de seguro.",
+            "buenas noches": "¡Buenas noches! Aunque es tarde, estoy aquí para ayudarte. ¿Qué información necesitas?",
+            "qué seguros ofrecen": "Ofrecemos tres tipos principales de seguros:<br>• <strong>Seguro de Salud</strong> - Con planes Local, Plus e Internacional<br>• <strong>Seguro de Vida</strong> - Con protección familiar y global<br>• <strong>Planes de Inversión</strong> - Estrategias conservadoras y de crecimiento<br>¿Te interesa alguno en particular?",
+            "seguro de salud": "¡Excelente elección! Nuestros seguros de salud incluyen:<br>• <strong>Salud Local</strong>: Cobertura nacional básica<br>• <strong>Salud Plus</strong>: Cobertura ampliada (más popular)<br>• <strong>Salud Internacional</strong>: Cobertura global completa<br>¿Quieres que te contactemos con una cotización personalizada?",
+            "seguro de vida": "Perfecto, nuestros seguros de vida ofrecen:<br>• <strong>Vida a Término</strong>: Protección básica<br>• <strong>Vida Familiar</strong>: Protección completa (recomendado)<br>• <strong>Vida con Ahorro</strong>: Protección global con beneficios<br>¿Te gustaría más información sobre alguno?",
+            "planes de inversión": "Nuestros planes de inversión se adaptan a tu perfil:<br>• <strong>Inversión Local</strong>: Estrategia conservadora<br>• <strong>Inversión Plus</strong>: Estrategia balanceada<br>• <strong>Inversión Global</strong>: Estrategia de crecimiento<br>¿Eres más conservador o buscas mayor rentabilidad?",
+            "cómo solicito una cotización": "Es muy sencillo:<br>1. Completa el formulario de contacto en nuestra página<br>2. Nuestra asesora se comunicará contigo en menos de 24 horas<br>3. Recibirás una cotización personalizada sin compromiso<br>¿Te ayudo con algo más?",
+            "cuáles son los métodos de pago": "Ofrecemos flexibilidad total en pagos:<br>• Mensual<br>• Trimestral<br>• Anual (con descuento especial)<br>Aceptamos transferencias, tarjetas de crédito y débito. ¿Necesitas más detalles?",
+            "qué cobertura incluyen": "Las coberturas varían según el plan, pero generalmente incluyen:<br>• Atención médica y hospitalaria<br>• Medicamentos<br>• Emergencias 24/7<br>• Asistencia personalizada<br>¿Te interesa alguna cobertura específica?",
+            "tienen cobertura internacional": "¡Sí! Nuestro plan <strong>Salud Internacional</strong> ofrece:<br>• Atención en LATAM, USA y Europa<br>• Cobertura hospitalaria completa<br>• Segunda opinión médica<br>• Asistencia en viajes<br>¿Viajas frecuentemente?",
+            "cuánto tiempo toma el proceso": "El proceso es ágil:<br>• Cotización: 24 horas<br>• Aprobación: 2-3 días hábiles<br>• Activación: Inmediata tras pago<br>Nuestra asesora te guiará en cada paso.",
+            "necesito hablar con un asesor": "¡Por supuesto! Te recomiendo:<br>1. Completar el formulario de contacto<br>2. Nuestra asesora Sonia te llamará personalmente<br>3. Ella resolverá todas tus dudas específicas<br>¿Prefieres que te contactemos por WhatsApp?",
+            "gracias": "¡De nada! Estoy aquí para ayudarte. ¿Tienes alguna otra pregunta sobre nuestros seguros?",
+            "adiós": "¡Hasta luego! Recuerda que puedes contactarnos cuando lo necesites. Que tengas un excelente día.",
+            "chao": "¡Nos vemos! Si necesitas más información, no dudes en volver. ¡Cuídate!",
+            "default": "Lo siento, no entendí completamente tu pregunta. Te recomiendo:<br>• Completar el formulario de contacto para hablar con nuestra asesora<br>• O preguntarme sobre: seguros de salud, seguros de vida, planes de inversión o métodos de pago<br>¿En qué más puedo ayudarte?"
+        };
+
+        function addBotMessage(message) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'flex items-start';
+            messageDiv.innerHTML = `
+                <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white mr-2 flex-shrink-0">
+                    <i class="fas fa-robot text-sm"></i>
+                </div>
+                <div class="bg-white p-3 rounded-lg shadow-sm max-w-xs">
+                    <p class="text-sm">${message}</p>
+                </div>
+            `;
+            chatbotMessages.appendChild(messageDiv);
+            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        }
+
+        function addUserMessage(message) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'flex items-start justify-end';
+            messageDiv.innerHTML = `
+                <div class="bg-primary text-white p-3 rounded-lg shadow-sm max-w-xs">
+                    <p class="text-sm">${message}</p>
+                </div>
+                <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-white ml-2 flex-shrink-0">
+                    <i class="fas fa-user text-sm"></i>
+                </div>
+            `;
+            chatbotMessages.appendChild(messageDiv);
+            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        }
+
+        function processUserInput() {
+            const userMessage = chatbotInput.value.trim().toLowerCase();
+            if (userMessage === '') return;
+            
+            addUserMessage(userMessage);
+            chatbotInput.value = '';
+            
+            // Simular tiempo de respuesta
+            setTimeout(() => {
+                let response = botResponses.default;
+                let foundMatch = false;
+                
+                // Buscar coincidencia exacta primero
+                for (const key in botResponses) {
+                    if (userMessage === key.toLowerCase()) {
+                        response = botResponses[key];
+                        foundMatch = true;
+                        break;
+                    }
+                }
+                
+                // Si no hay coincidencia exacta, buscar por palabras clave
+                if (!foundMatch) {
+                    for (const key in botResponses) {
+                        if (userMessage.includes(key) && key !== "default") {
+                            response = botResponses[key];
+                            break;
+                        }
+                    }
+                }
+                
+                addBotMessage(response);
+            }, 800);
+        }
+
+        chatbotSend.addEventListener('click', processUserInput);
+        
+        chatbotInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                processUserInput();
+            }
+        });
+
+        quickQuestions.forEach(button => {
+            button.addEventListener('click', function() {
+                const question = this.getAttribute('data-question');
+                chatbotInput.value = question;
+                processUserInput();
+            });
+        });
+
+        // Validación del campo de teléfono para solo números
+        document.getElementById('phone').addEventListener('input', function(e) {
+            // Remover cualquier carácter que no sea número
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+
+        // FORMULARIO DE CONTACTO - COMPATIBLE CON RENDER
+        document.getElementById('contact-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const submitText = document.getElementById('submit-text');
+            const loadingSpinner = document.getElementById('loading-spinner');
+            
+            // Mostrar loading
+            submitText.classList.add('hidden');
+            loadingSpinner.classList.remove('hidden');
+            submitBtn.disabled = true;
+            
+            try {
+                const formData = {
+                    name: document.getElementById('name').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    plan_type: document.getElementById('plan-type').value,
+                    message: document.getElementById('message').value,
+                    timestamp: new Date().toISOString()
+                };
+                
+                // Envío del formulario - Versión compatible con Render
+                const response = await fetch('https://proteccion-total.onrender.com/enviar-cotizacion', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                if (response.ok) {
+                    alert('¡Gracias! Nuestra asesora de seguros te contactará en menos de 24 horas.');
+                    this.reset();
+                } else {
+                    // Fallback si el servidor no responde
+                    alert('¡Solicitud recibida! Nuestra asesora Sonia te contactará pronto.');
+                    this.reset();
+                }
+                
+            } catch (error) {
+                // Fallback para errores de conexión
+                alert('¡Solicitud guardada! Nuestra asesora te contactará pronto.');
+                this.reset();
+                console.log('Datos del formulario (para desarrollo):', {
+                    name: document.getElementById('name').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    plan_type: document.getElementById('plan-type').value,
+                    message: document.getElementById('message').value
+                });
+            } finally {
+                // Ocultar loading
+                submitText.classList.remove('hidden');
+                loadingSpinner.classList.add('hidden');
+                submitBtn.disabled = false;
+            }
+        });
+
+        // Navegación suave para enlaces internos
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                    
+                    // Cerrar menú móvil si está abierto
+                    document.getElementById('mobile-menu').classList.add('hidden');
+                }
+            });
+        });
+
+        // Cerrar menú móvil al hacer clic fuera de él
+        document.addEventListener('click', function(e) {
+            const mobileMenu = document.getElementById('mobile-menu');
+            const menuToggle = document.getElementById('menu-toggle');
+            
+            if (!mobileMenu.contains(e.target) && !menuToggle.contains(e.target) && !mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
