@@ -1,28 +1,23 @@
 from flask import Flask, request, jsonify
 from datetime import datetime
 import os
-import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
+import requests
 from dotenv import load_dotenv
 
+# Cargar variables del entorno (.env o Render)
 load_dotenv()
 
 app = Flask(__name__)
 
-# Envío de correo con configuración comprobada
+# ✉️ Envío de correo con Mailjet API
 def enviar_correo_confirmacion(destinatario, nombre, email, telefono, plan_interes, mensaje_cliente):
-    remitente = os.getenv("EMAIL_USER")
-    password = os.getenv("EMAIL_PASSWORD")
+    api_key = os.getenv("MAILJET_API_KEY")
+    api_secret = os.getenv("MAILJET_SECRET_KEY")
+    remitente = os.getenv("MAILJET_SENDER")
 
-    if not remitente or not password:
-        print("❌ Credenciales de Gmail no configuradas.")
+    if not all([api_key, api_secret, remitente]):
+        print("❌ Variables de entorno Mailjet faltantes.")
         return False
-
-    mensaje = MIMEMultipart()
-    mensaje["From"] = remitente
-    mensaje["To"] = destinatario
-    mensaje["Subject"] = f"📋 Nueva cotización de seguros - {nombre}"
 
     cuerpo = f"""
     📋 NUEVA SOLICITUD DE COTIZACIÓN
@@ -39,14 +34,32 @@ def enviar_correo_confirmacion(destinatario, nombre, email, telefono, plan_inter
     📅 Enviado el: {datetime.now().strftime("%d/%m/%Y %H:%M")}
     🔔 Contactar al cliente lo antes posible.
     """
-    mensaje.attach(MIMEText(cuerpo, "plain"))
+
+    data = {
+        "Messages": [
+            {
+                "From": {"Email": remitente, "Name": "Cotizador de Seguros"},
+                "To": [{"Email": destinatario}],
+                "Subject": f"📋 Nueva cotización de seguros - {nombre}",
+                "TextPart": cuerpo,
+            }
+        ]
+    }
 
     try:
-        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
-            server.login(remitente, password)
-            server.send_message(mensaje)
-        print(f"✅ Correo enviado a {destinatario}")
-        return True
+        response = requests.post(
+            "https://api.mailjet.com/v3.1/send",
+            auth=(api_key, api_secret),
+            json=data,
+        )
+
+        if response.status_code == 200:
+            print(f"✅ Correo enviado correctamente a {destinatario}")
+            return True
+        else:
+            print(f"❌ Error Mailjet: {response.status_code} - {response.text}")
+            return False
+
     except Exception as e:
         print(f"❌ Error al enviar correo: {e}")
         return False
@@ -69,7 +82,7 @@ def enviar_cotizacion():
         if enviar_correo_confirmacion(destinatario, nombre, email, telefono, plan_interes, mensaje):
             return jsonify({"status": "success", "message": "¡Gracias! Nuestra asesora te contactará pronto."})
         else:
-            return jsonify({"error": "No se pudo enviar el correo. Verifica las credenciales."}), 500
+            return jsonify({"error": "Error al enviar el correo. Intenta nuevamente más tarde."}), 500
 
     except Exception as e:
         print(f"❌ Error en /enviar-cotizacion: {e}")
