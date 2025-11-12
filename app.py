@@ -9,13 +9,18 @@ load_dotenv()
 
 app = Flask(__name__)
 
-# ✉️ Envío de correo con Mailjet API
+# ✉️ Envío de correo con Mailjet API - VERSIÓN CORREGIDA
 def enviar_correo_confirmacion(destinatario, nombre, email, telefono, plan_interes, mensaje_cliente):
     api_key = os.getenv("MAILJET_API_KEY")
     api_secret = os.getenv("MAILJET_SECRET_KEY")
     remitente = os.getenv("MAILJET_SENDER")
 
-    if not all([api_key, api_secret, remitente]):
+    print(f"🔧 Debug: API Key: {api_key[:8]}...")  # Solo mostrar primeros 8 chars
+    print(f"🔧 Debug: API Secret: {api_secret[:8]}...")
+    print(f"🔧 Debug: Remitente: {remitente}")
+    print(f"🔧 Debug: Destinatario: {destinatario}")
+
+    if not all([api_key, api_secret, remitente, destinatario]):
         print("❌ Variables de entorno Mailjet faltantes.")
         return False
 
@@ -39,7 +44,7 @@ def enviar_correo_confirmacion(destinatario, nombre, email, telefono, plan_inter
         "Messages": [
             {
                 "From": {"Email": remitente, "Name": "Cotizador de Seguros"},
-                "To": [{"Email": destinatario}],
+                "To": [{"Email": destinatario, "Name": "Asesora de Seguros"}],
                 "Subject": f"📋 Nueva cotización de seguros - {nombre}",
                 "TextPart": cuerpo,
             }
@@ -47,21 +52,32 @@ def enviar_correo_confirmacion(destinatario, nombre, email, telefono, plan_inter
     }
 
     try:
+        print("📤 Intentando enviar correo via Mailjet...")
         response = requests.post(
             "https://api.mailjet.com/v3.1/send",
             auth=(api_key, api_secret),
             json=data,
+            timeout=30
         )
+
+        print(f"📨 Respuesta Mailjet - Status: {response.status_code}")
+        print(f"📨 Respuesta Mailjet - Text: {response.text}")
 
         if response.status_code == 200:
             print(f"✅ Correo enviado correctamente a {destinatario}")
             return True
         else:
-            print(f"❌ Error Mailjet: {response.status_code} - {response.text}")
+            print(f"❌ Error Mailjet: {response.status_code}")
+            # Intentar parsear el error de Mailjet
+            try:
+                error_data = response.json()
+                print(f"❌ Detalles del error: {error_data}")
+            except:
+                print(f"❌ Error sin detalles: {response.text}")
             return False
 
     except Exception as e:
-        print(f"❌ Error al enviar correo: {e}")
+        print(f"❌ Error al enviar correo: {str(e)}")
         return False
 
 
@@ -69,6 +85,8 @@ def enviar_correo_confirmacion(destinatario, nombre, email, telefono, plan_inter
 def enviar_cotizacion():
     try:
         data = request.get_json()
+        print(f"📝 Datos recibidos: {data}")
+        
         nombre = data.get("name", "")
         email = data.get("email", "")
         telefono = data.get("phone", "")
@@ -79,6 +97,8 @@ def enviar_cotizacion():
             return jsonify({"error": "Por favor completa todos los campos requeridos"}), 400
 
         destinatario = os.getenv("ASESORA_SEGUROS_EMAIL")
+        print(f"🎯 Enviando a: {destinatario}")
+        
         if enviar_correo_confirmacion(destinatario, nombre, email, telefono, plan_interes, mensaje):
             return jsonify({"status": "success", "message": "¡Gracias! Nuestra asesora te contactará pronto."})
         else:
@@ -93,6 +113,11 @@ def enviar_cotizacion():
 def home():
     with open("index.html", "r", encoding="utf-8") as f:
         return f.read()
+
+# Servir archivos estáticos (para los logos)
+@app.route('/static/<path:path>')
+def serve_static(path):
+    return app.send_static_file(path)
 
 
 if __name__ == "__main__":
