@@ -10,81 +10,82 @@ load_dotenv()
 
 app = Flask(__name__)
 
-# ✉️ FUNCIÓN DE ENVÍO DE CORREO CON RESEND (CORRECTA)
-def enviar_correo_confirmacion(nombre, email, telefono, plan_interes, mensaje_cliente):
-    api_key = os.getenv("RESEND_API_KEY")
-    remitente = os.getenv("RESEND_SENDER")
+# ✉️ FUNCIÓN DE ENVÍO DE CORREO CON RESEND
+def enviar_correo_cotizacion(nombre, email, telefono, plan, mensaje_cliente):
+    try:
+        # API KEY FIJA PARA TU PROGRAMA
+        resend.api_key = os.getenv("RESEND_API_KEY")
 
-    # DESTINATARIO FIJO (tu correo)
-    destinatario = "asesoriadeseguro123@gmail.com"
+        remitente = os.getenv("RESEND_SENDER")
+        destinatario = "asesoriadeseguro123@gmail.com"  # correo fijo que recibe todas las cotizaciones
 
-    print(f"🔧 RESEND API KEY: {'CONFIGURADA' if api_key else 'NO CONFIGURADA'}")
-    print(f"🔧 REMITENTE: {remitente}")
-    print(f"🔧 DESTINATARIO FIJO: {destinatario}")
+        print(f"🔧 RESEND_API_KEY configurada: {'Sí' if resend.api_key else 'No'}")
+        print(f"🔧 Remitente: {remitente}")
+        print(f"🔧 Destinatario fijo: {destinatario}")
 
-    if not api_key or not remitente:
-        print("❌ Falta RESEND_API_KEY o RESEND_SENDER")
-        return False
+        if not resend.api_key:
+            print("❌ ERROR: RESEND_API_KEY no configurada en Render.")
+            return False
 
-    resend.api_key = api_key
+        if not remitente:
+            print("❌ ERROR: RESEND_SENDER no configurado en Render.")
+            return False
 
-    # Construcción del correo HTML
-    html = f"""
-        <h2>📋 NUEVA SOLICITUD DE COTIZACIÓN</h2>
+        # Construcción del HTML bonito
+        html = f"""
+        <h2>📋 NUEVA COTIZACIÓN DE SEGUROS</h2>
 
         <p><strong>👤 Nombre:</strong> {nombre}</p>
         <p><strong>📧 Email:</strong> {email}</p>
         <p><strong>📞 Teléfono:</strong> {telefono}</p>
-        <p><strong>🏦 Plan de interés:</strong> {plan_interes}</p>
+        <p><strong>🛡️ Plan de interés:</strong> {plan}</p>
 
         <h3>💬 Mensaje del cliente:</h3>
         <p>{mensaje_cliente}</p>
 
         <hr>
-        <p>📅 Enviado el {datetime.now().strftime("%d/%m/%Y %H:%M")}</p>
-        <p>🔔 Contactar al cliente lo antes posible.</p>
-    """
+        <p>📅 Enviado el {datetime.now().strftime('%d/%m/%Y %H:%M')}</p>
+        """
 
-    try:
+        # Enviar correo
         response = resend.Emails.send({
-            "from": f"Protección Total <{remitente}>",
+            "from": f"Asesoría de Seguros <{remitente}>",
             "to": destinatario,
-            "subject": f"📋 Nueva cotización de seguros - {nombre}",
+            "subject": f"📋 Nueva Cotización - {nombre}",
             "html": html
         })
 
-        print("✅ Correo enviado mediante Resend:", response)
+        print("✅ Correo enviado correctamente:", response)
         return True
 
     except Exception as e:
-        print("❌ Error Resend:", e)
+        print("❌ ERROR enviando correo con Resend:", e)
         return False
 
 
-# 🔥 ENDPOINT QUE RECIBE EL FORMULARIO DEL FRONTEND
+# 🔥 ENDPOINT PARA RECIBIR COTIZACIONES DESDE EL FRONTEND
 @app.route("/enviar-cotizacion", methods=["POST"])
 def enviar_cotizacion():
     try:
         data = request.get_json()
-        print(f"📝 Datos recibidos: {data}")
-        
-        nombre = data.get("name", "")
-        email = data.get("email", "")
-        telefono = data.get("phone", "")
-        plan_interes = data.get("plan_type", "")
-        mensaje = data.get("message", "")
+        print(f"📝 Datos recibidos:", data)
+
+        nombre = data.get("name")
+        email = data.get("email")
+        telefono = data.get("phone")
+        plan = data.get("plan_type")
+        mensaje = data.get("message")
 
         if not nombre or not email or not telefono:
-            return jsonify({"error": "Por favor completa todos los campos requeridos"}), 400
-        
-        # Llama a la función SIN necesidad de destinatario
-        if enviar_correo_confirmacion(nombre, email, telefono, plan_interes, mensaje):
-            return jsonify({"status": "success", "message": "¡Gracias! Nuestra asesora te contactará pronto."})
+            return jsonify({"error": "Faltan campos obligatorios"}), 400
+
+        if enviar_correo_cotizacion(nombre, email, telefono, plan, mensaje):
+            return jsonify({"status": "success", "message": "¡Gracias! Tu cotización fue enviada correctamente."})
         else:
-            return jsonify({"error": "Error al enviar el correo. Intenta nuevamente más tarde."}), 500
+            return jsonify({"error": "Error enviando el correo"}), 500
 
     except Exception as e:
-        print(f"❌ Error en /enviar-cotizacion: {e}")
+        print("❌ ERROR en /enviar-cotizacion:", e)
         return jsonify({"error": "Error interno del servidor"}), 500
 
 
@@ -94,7 +95,7 @@ def home():
     with open("index.html", "r", encoding="utf-8") as f:
         return f.read()
 
-# Servir archivos estáticos (logos, imágenes)
+# Servir logos e imágenes estáticas
 @app.route('/static/<path:path>')
 def serve_static(path):
     return app.send_static_file(path)
