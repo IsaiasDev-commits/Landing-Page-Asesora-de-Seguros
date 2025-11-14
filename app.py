@@ -3,84 +3,65 @@ from datetime import datetime
 import os
 import requests
 from dotenv import load_dotenv
+import resend
 
 # Cargar variables del entorno (.env o Render)
 load_dotenv()
 
 app = Flask(__name__)
 
-# ✉️ Envío de correo con Mailjet API - VERSIÓN CORREGIDA
-def enviar_correo_confirmacion(destinatario, nombre, email, telefono, plan_interes, mensaje_cliente):
-    api_key = os.getenv("MAILJET_API_KEY")
-    api_secret = os.getenv("MAILJET_SECRET_KEY")
-    remitente = os.getenv("MAILJET_SENDER")
+# ✉️ FUNCIÓN DE ENVÍO DE CORREO CON RESEND (CORRECTA)
+def enviar_correo_confirmacion(nombre, email, telefono, plan_interes, mensaje_cliente):
+    api_key = os.getenv("RESEND_API_KEY")
+    remitente = os.getenv("RESEND_SENDER")
 
-    print(f"🔧 Debug: API Key: {api_key[:8]}...")  # Solo mostrar primeros 8 chars
-    print(f"🔧 Debug: API Secret: {api_secret[:8]}...")
-    print(f"🔧 Debug: Remitente: {remitente}")
-    print(f"🔧 Debug: Destinatario: {destinatario}")
+    # DESTINATARIO FIJO (tu correo)
+    destinatario = "asesoriadeseguro123@gmail.com"
 
-    if not all([api_key, api_secret, remitente, destinatario]):
-        print("❌ Variables de entorno Mailjet faltantes.")
+    print(f"🔧 RESEND API KEY: {'CONFIGURADA' if api_key else 'NO CONFIGURADA'}")
+    print(f"🔧 REMITENTE: {remitente}")
+    print(f"🔧 DESTINATARIO FIJO: {destinatario}")
+
+    if not api_key or not remitente:
+        print("❌ Falta RESEND_API_KEY o RESEND_SENDER")
         return False
 
-    cuerpo = f"""
-    📋 NUEVA SOLICITUD DE COTIZACIÓN
+    resend.api_key = api_key
 
-    👤 Nombre: {nombre}
-    📧 Email: {email}
-    📞 Teléfono: {telefono}
-    🏦 Plan de interés: {plan_interes if plan_interes else 'No especificado'}
+    # Construcción del correo HTML
+    html = f"""
+        <h2>📋 NUEVA SOLICITUD DE COTIZACIÓN</h2>
 
-    💬 Mensaje del cliente:
-    {mensaje_cliente}
+        <p><strong>👤 Nombre:</strong> {nombre}</p>
+        <p><strong>📧 Email:</strong> {email}</p>
+        <p><strong>📞 Teléfono:</strong> {telefono}</p>
+        <p><strong>🏦 Plan de interés:</strong> {plan_interes}</p>
 
-    ---
-    📅 Enviado el: {datetime.now().strftime("%d/%m/%Y %H:%M")}
-    🔔 Contactar al cliente lo antes posible.
+        <h3>💬 Mensaje del cliente:</h3>
+        <p>{mensaje_cliente}</p>
+
+        <hr>
+        <p>📅 Enviado el {datetime.now().strftime("%d/%m/%Y %H:%M")}</p>
+        <p>🔔 Contactar al cliente lo antes posible.</p>
     """
 
-    data = {
-        "Messages": [
-            {
-                "From": {"Email": remitente, "Name": "Cotizador de Seguros"},
-                "To": [{"Email": destinatario, "Name": "Asesora de Seguros"}],
-                "Subject": f"📋 Nueva cotización de seguros - {nombre}",
-                "TextPart": cuerpo,
-            }
-        ]
-    }
-
     try:
-        print("📤 Intentando enviar correo via Mailjet...")
-        response = requests.post(
-            "https://api.mailjet.com/v3.1/send",
-            auth=(api_key, api_secret),
-            json=data,
-            timeout=30
-        )
+        response = resend.Emails.send({
+            "from": f"Protección Total <{remitente}>",
+            "to": destinatario,
+            "subject": f"📋 Nueva cotización de seguros - {nombre}",
+            "html": html
+        })
 
-        print(f"📨 Respuesta Mailjet - Status: {response.status_code}")
-        print(f"📨 Respuesta Mailjet - Text: {response.text}")
-
-        if response.status_code == 200:
-            print(f"✅ Correo enviado correctamente a {destinatario}")
-            return True
-        else:
-            print(f"❌ Error Mailjet: {response.status_code}")
-            # Intentar parsear el error de Mailjet
-            try:
-                error_data = response.json()
-                print(f"❌ Detalles del error: {error_data}")
-            except:
-                print(f"❌ Error sin detalles: {response.text}")
-            return False
+        print("✅ Correo enviado mediante Resend:", response)
+        return True
 
     except Exception as e:
-        print(f"❌ Error al enviar correo: {str(e)}")
+        print("❌ Error Resend:", e)
         return False
 
 
+# 🔥 ENDPOINT QUE RECIBE EL FORMULARIO DEL FRONTEND
 @app.route("/enviar-cotizacion", methods=["POST"])
 def enviar_cotizacion():
     try:
@@ -95,11 +76,9 @@ def enviar_cotizacion():
 
         if not nombre or not email or not telefono:
             return jsonify({"error": "Por favor completa todos los campos requeridos"}), 400
-
-        destinatario = os.getenv("ASESORA_SEGUROS_EMAIL")
-        print(f"🎯 Enviando a: {destinatario}")
         
-        if enviar_correo_confirmacion(destinatario, nombre, email, telefono, plan_interes, mensaje):
+        # Llama a la función SIN necesidad de destinatario
+        if enviar_correo_confirmacion(nombre, email, telefono, plan_interes, mensaje):
             return jsonify({"status": "success", "message": "¡Gracias! Nuestra asesora te contactará pronto."})
         else:
             return jsonify({"error": "Error al enviar el correo. Intenta nuevamente más tarde."}), 500
@@ -109,17 +88,19 @@ def enviar_cotizacion():
         return jsonify({"error": "Error interno del servidor"}), 500
 
 
+# 🌐 SERVIR TU LANDING PAGE
 @app.route("/")
 def home():
     with open("index.html", "r", encoding="utf-8") as f:
         return f.read()
 
-# Servir archivos estáticos (para los logos)
+# Servir archivos estáticos (logos, imágenes)
 @app.route('/static/<path:path>')
 def serve_static(path):
     return app.send_static_file(path)
 
 
+# 🚀 EJECUCIÓN EN PRODUCCIÓN
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=True)
