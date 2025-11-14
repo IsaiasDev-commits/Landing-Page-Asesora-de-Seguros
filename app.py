@@ -10,6 +10,18 @@ load_dotenv()
 app = Flask(__name__)
 
 # -------------------------------------------------------
+# 🩺 HEALTH CHECK ENDPOINT (CRÍTICO PARA RENDER)
+# -------------------------------------------------------
+
+@app.route('/health')
+def health_check():
+    return jsonify({"status": "healthy", "message": "Servidor funcionando"}), 200
+
+@app.route('/ping')
+def ping():
+    return 'pong', 200
+
+# -------------------------------------------------------
 # ✉️ FUNCIÓN PARA ENVIAR LOS CORREOS (ESTILO EQUILIBRA)
 # -------------------------------------------------------
 
@@ -18,7 +30,7 @@ def enviar_correo_resend_seguros(nombre, correo, telefono, plan, mensaje_cliente
         resend_api_key = os.getenv("RESEND_API_KEY")
 
         if not resend_api_key:
-            app.logger.error("❌ ERROR: RESEND_API_KEY no configurada en Render.")
+            print("❌ ERROR: RESEND_API_KEY no configurada en Render.")
             return False
 
         resend.api_key = resend_api_key
@@ -54,11 +66,11 @@ def enviar_correo_resend_seguros(nombre, correo, telefono, plan, mensaje_cliente
             "html": html_body
         })
 
-        app.logger.info(f"📧 Correo enviado correctamente vía Resend: {response}")
+        print(f"📧 Correo enviado correctamente vía Resend: {response}")
         return True
 
     except Exception as e:
-        app.logger.error(f"❌ ERROR enviando correo con Resend: {e}")
+        print(f"❌ ERROR enviando correo con Resend: {e}")
         return False
 
 
@@ -70,7 +82,7 @@ def enviar_correo_resend_seguros(nombre, correo, telefono, plan, mensaje_cliente
 def enviar_cotizacion():
     try:
         data = request.get_json()
-        app.logger.info(f"📝 Datos recibidos: {data}")
+        print(f"📝 Datos recibidos: {data}")
 
         nombre = data.get("name")
         correo = data.get("email")
@@ -92,7 +104,7 @@ def enviar_cotizacion():
             return jsonify({"error": "No se pudo enviar el correo."}), 500
 
     except Exception as e:
-        app.logger.error(f"❌ ERROR en /enviar-cotizacion: {e}")
+        print(f"❌ ERROR en /enviar-cotizacion: {e}")
         return jsonify({"error": "Error interno del servidor"}), 500
 
 
@@ -111,10 +123,10 @@ def serve_static(path):
 
 
 # -------------------------------------------------------
-# 🚀 EJECUCIÓN
+# 🚀 EJECUCIÓN (GUNICORN SE ENCARGA EN PRODUCCIÓN)
 # -------------------------------------------------------
 
 if __name__ == "__main__":
+    # Solo para desarrollo local
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port, debug=True)
-
+    app.run(host="0.0.0.0", port=port, debug=False)
