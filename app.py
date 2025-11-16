@@ -3,9 +3,20 @@ from datetime import datetime
 import os
 import resend
 from dotenv import load_dotenv
+import logging
+import sys
 
 # Cargar variables del entorno
 load_dotenv()
+
+# Configurar logging robusto para Render
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s %(levelname)s %(message)s',
+    handlers=[
+        logging.StreamHandler(sys.stdout),  # Para ver logs en Render
+    ]
+)
 
 app = Flask(__name__)
 
@@ -15,7 +26,12 @@ app = Flask(__name__)
 
 @app.route('/health')
 def health_check():
-    return jsonify({"status": "healthy", "message": "Servidor funcionando"}), 200
+    logging.info("Health check ejecutado")
+    return jsonify({
+        "status": "healthy", 
+        "message": "Servidor funcionando",
+        "timestamp": datetime.now().isoformat()
+    }), 200
 
 @app.route('/ping')
 def ping():
@@ -30,7 +46,7 @@ def enviar_correo_resend_seguros(nombre, correo, telefono, plan, mensaje_cliente
         resend_api_key = os.getenv("RESEND_API_KEY")
 
         if not resend_api_key:
-            print("❌ ERROR: RESEND_API_KEY no configurada en Render.")
+            logging.error("❌ ERROR: RESEND_API_KEY no configurada en Render.")
             return False
 
         resend.api_key = resend_api_key
@@ -66,11 +82,11 @@ def enviar_correo_resend_seguros(nombre, correo, telefono, plan, mensaje_cliente
             "html": html_body
         })
 
-        print(f"📧 Correo enviado correctamente vía Resend: {response}")
+        logging.info(f"📧 Correo enviado correctamente vía Resend")
         return True
 
     except Exception as e:
-        print(f"❌ ERROR enviando correo con Resend: {e}")
+        logging.error(f"❌ ERROR enviando correo con Resend: {e}")
         return False
 
 
@@ -82,7 +98,7 @@ def enviar_correo_resend_seguros(nombre, correo, telefono, plan, mensaje_cliente
 def enviar_cotizacion():
     try:
         data = request.get_json()
-        print(f"📝 Datos recibidos: {data}")
+        logging.info(f"📝 Datos recibidos para cotización: {data}")
 
         nombre = data.get("name")
         correo = data.get("email")
@@ -104,7 +120,7 @@ def enviar_cotizacion():
             return jsonify({"error": "No se pudo enviar el correo."}), 500
 
     except Exception as e:
-        print(f"❌ ERROR en /enviar-cotizacion: {e}")
+        logging.error(f"❌ ERROR en /enviar-cotizacion: {e}")
         return jsonify({"error": "Error interno del servidor"}), 500
 
 
@@ -114,6 +130,7 @@ def enviar_cotizacion():
 
 @app.route("/")
 def home():
+    logging.info("Página principal accedida")
     with open("index.html", "r", encoding="utf-8") as f:
         return f.read()
 
@@ -123,10 +140,18 @@ def serve_static(path):
 
 
 # -------------------------------------------------------
-# 🚀 EJECUCIÓN (GUNICORN SE ENCARGA EN PRODUCCIÓN)
+# 🚀 EJECUCIÓN CON WAITRESS (MÁS ESTABLE EN RENDER)
 # -------------------------------------------------------
 
 if __name__ == "__main__":
-    # Solo para desarrollo local
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port, debug=False)
+    
+    # En producción usar Waitress (más estable que gunicorn en Render Free)
+    if os.environ.get('RENDER'):
+        from waitress import serve
+        logging.info(f"🚀 Iniciando servidor Waitress en puerto {port}")
+        serve(app, host='0.0.0.0', port=port)
+    else:
+        # En desarrollo usar Flask
+        logging.info(f"🚀 Iniciando servidor Flask en puerto {port}")
+        app.run(host="0.0.0.0", port=port, debug=False)
